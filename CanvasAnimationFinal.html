@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <title>Particle System</title>
+ <meta charset="utf-8">
+ <style>
+canvas {
+ border: 1px solid black;;
+}
+</style>
+ <script>
+ 
+ var canvas;
+ var context;
+ var particles;
+ var timer;
+ var clickCounter = 0;
+ var clickCounterScreen = 0;
+ var clickArray = [];
+ var wordArray = ["what","is","love","baby","don't","hurt","me","don't","hurt","me","no","more"];
+ var shapes = [0, 1, 2, 3, 4];
+ var shapeCounter;
+ var what1= new Audio("what1.wav");
+ var is1= new Audio("is1.wav");
+ var love1= new Audio("love1.wav");
+ var baby1= new Audio("baby1.wav");
+ var dont1= new Audio("dont1.wav");
+ var hurt1= new Audio("hurt1.wav");
+ var me1= new Audio("me1.wav");
+ var dont2= new Audio("dont2.wav");
+ var hurt2= new Audio("hurt2.wav");
+ var me2= new Audio("me2.wav");
+ var no1= new Audio("no1.wav");
+ var more1= new Audio("more1.wav");
+  var insturmental= new Audio("insturmental.wav");
+ var rox = new Image();
+ rox.src = 'rox.jpg';
+
+ 
+ 
+ 
+ function makeParticles() {
+	
+	if (clickCounter == 12) {
+		clickCounter = 0;
+	}
+	particles = [];
+	for(var i = 0; i < 30; i++){
+		clickArray[clickCounter] = particles.push(new Particle());
+	}
+	context.font="120px Verdana";
+	context.fillStyle = 'white';
+	context.fillText(wordArray[(clickCounter)],((event.clientX)-170),((event.clientY) + 70));
+	
+	if (clickCounter == 0){
+	what1.play();
+	}	
+		if (clickCounter == 1){
+	is1.play();
+	}	
+		if (clickCounter == 2){
+	love1.play();
+	}	
+		if (clickCounter == 3){
+	baby1.play();
+	}	
+		if (clickCounter == 4){
+	dont1.play();
+	}
+		if (clickCounter == 5){
+	hurt1.play();
+	}	
+		if (clickCounter == 6){
+	me1.play();
+	}	
+		if (clickCounter == 7){
+	dont2.play();
+	}	
+		if (clickCounter == 8){
+	hurt2.play();
+	}	
+		if (clickCounter == 9){
+	me2.play();	
+	}	
+		if (clickCounter == 10){
+	no1.play();
+	}	
+		if (clickCounter == 11){
+	more1.play();
+	}
+	if (clickCounterScreen == 12) {
+	insturmental.play();
+	}
+	
+
+	clickCounter++;
+	clickCounterScreen++;
+	shapeCounter = shapes[Math.floor(Math.random()*shapes.length)];
+	console.log(particles);
+	console.log("Shape array number: ", shapeCounter);
+	
+}
+ function degreesToRadians(degrees) {
+	 //converts from degrees to radians and returns
+	 return (degrees * Math.PI)/180;
+ }
+ 
+ function Particle()
+ {
+	 //the constructor for a single particle, with random starting x+y, velocity, color, and radius
+	 //this.x = Math.random()*canvas.width;
+	 //this.y = Math.random()*canvas.height;
+	 
+	 this.x = event.clientX;
+	 this.y = event.clientY;
+	 this.vx = Math.random()*10-5;
+	 this.vy = Math.random()*10-5;
+	 var colors = ["rgb(4,192,240)", "rgb(125,250,172)", "rgb(238,44,179)", "rgb(127,24,199)"];
+	 this.color = colors[Math.floor(Math.random()*colors.length)];
+	 this.radius = 25;
+	 this.width = 40;
+	 this.length = 40;
+	 
+ }
+ function moveParticles() {
+	 //partially clear the screen to fade previous circles, and draw a new particle at each new coordinate
+	 context.globalCompositeOperation = "source-over";
+	 context.fillStyle = "rgba(0, 0, 0, 0.3)";
+	 
+	 if (clickCounterScreen > 12 ){
+	 context.drawImage(rox, 0, 0, canvas.width, canvas.height);   
+                    
+	 }
+	 else {
+	 context.fillRect(0, 0, canvas.width, canvas.height);
+	 }
+	 context.globalCompositeOperation = "lighter";
+
+	 for(var j = 0; j < clickArray.length; j++) {
+		
+//Circle
+
+		if (shapeCounter == 0) {
+		console.log("CIRCLE");
+			for(var i = 0; i < particles.length; i++)
+			{
+				var p = particles[i];
+				context.beginPath();
+				context.arc(p.x, p.y, p.radius, 0, degreesToRadians(360), true);
+				context.fillStyle = p.color;
+				context.fill();
+				p.x += p.vx;
+				p.y += p.vy;
+				if(p.x < -50) p.x = canvas.width+50;
+				if(p.y < -50) p.y = canvas.height+50;
+				if(p.x > canvas.width+50) p.x = -50;
+				if(p.y > canvas.height+50) p.y = -50;
+				if(p.radius > 0) {
+					p.radius--;
+				}
+			}
+		}
+
+//square
+		
+		if (shapeCounter == 1) {
+		console.log("SQUARE");
+			for(var i = 0; i < particles.length; i++)
+			{
+				var p = particles[i];			
+				if(p.width > 0) {
+					p.width--;
+				}
+				context.beginPath();
+				context.fillRect(p.x,p.y,p.width,p.width);
+				context.fillStyle = p.color;
+				context.fill();
+				p.x += p.vx;
+				p.y += p.vy;
+				if(p.x < -50) p.x = canvas.width+50;
+				if(p.y < -50) p.y = canvas.height+50;
+				if(p.x > canvas.width+50) p.x = -50;
+				if(p.y > canvas.height+50) p.y = -50;
+			}
+		}
+
+//Triangle
+
+
+		if (shapeCounter == 2) {
+		console.log("Triangle");
+			for(var i = 0; i < particles.length; i++)
+			{
+				var p = particles[i];			
+				if(context.moveTo > 0) {
+					context.moveTo--;
+					context.lineTo--;
+					context.lineTo--;
+				}
+				context.beginPath();
+				context.moveTo((p.x + 15),(p.y + 15));
+				context.lineTo((p.x + 15),(p.y + 45));
+				context.lineTo((p.x + 45),(p.y + 45));
+				context.closePath();
+				context.fillStyle = p.color;
+				context.fill();
+				p.x += p.vx;
+				p.y += p.vy;
+				if(p.x < -50) p.x = canvas.width+50;
+				if(p.y < -50) p.y = canvas.height+50;
+				if(p.x > canvas.width+50) p.x = -50;
+				if(p.y > canvas.height+50) p.y = -50;
+			}
+		}
+		
+//Face		
+		
+		
+		if (shapeCounter == 3) {
+		console.log("Face");
+			for(var i = 0; i < particles.length; i++)
+			{
+				var p = particles[i];			
+				if(context.moveTo > 0) {
+					context.moveTo--;
+					context.lineTo--;
+					context.lineTo--;
+				}
+				context.beginPath();
+				context.arc(p.x+75,p.y+75,50,0,Math.PI*2,true); // Outer circle
+				context.moveTo(p.x+110,p.y+75);
+				context.arc(p.x+75,p.y+75,35,0,Math.PI,false);  // Mouth (clockwise)
+				context.moveTo(p.x+65,p.y+65);
+				context.arc(p.x+60,p.y+65,5,0,Math.PI*2,true);  // Left eye
+				context.moveTo(p.x+95,p.y+65);
+				context.arc(p.x+90,p.y+65,5,0,Math.PI*2,true);  // Right eye
+				context.strokeStyle=p.color;
+				context.stroke();
+				p.x += p.vx;
+				p.y += p.vy;
+				if(p.x < -50) p.x = canvas.width+50;
+				if(p.y < -50) p.y = canvas.height+50;
+				if(p.x > canvas.width+50) p.x = -50;
+				if(p.y > canvas.height+50) p.y = -50;
+			}
+		}
+		
+//heart
+
+				if (shapeCounter == 4) {
+		console.log("heart");
+			for(var i = 0; i < particles.length; i++)
+			{
+				var p = particles[i];			
+				if(context.moveTo > 0) {
+					context.moveTo--;
+					context.lineTo--;
+					context.lineTo--;
+				}
+				    context.beginPath();
+    context.moveTo(p.x,p.y);
+    context.bezierCurveTo(75,37,70,25,50,25);
+    context.bezierCurveTo(20,25,20,62.5,20,62.5);
+    context.bezierCurveTo(20,80,40,102,75,120);
+    context.bezierCurveTo(110,102,130,80,130,62.5);
+    context.bezierCurveTo(130,62.5,130,25,100,25);
+    context.bezierCurveTo(85,25,75,37,75,40);
+	context.fillStyle = p.color;
+    context.fill();
+				p.x += p.vx;
+				p.y += p.vy;
+				if(p.x < -50) p.x = canvas.width+50;
+				if(p.y < -50) p.y = canvas.height+50;
+				if(p.x > canvas.width+50) p.x = -50;
+				if(p.y > canvas.height+50) p.y = -50;
+			}
+		}
+		
+		
+	 
+	}
+	
+	}
+ 
+ //Edit starts here
+ 
+
+	  var circles = [];
+	  function Circle(x, y, color) {
+		this.x = x;
+		this.y = y;
+		this.color = color;
+	  }
+	  
+      function init() {
+	  
+        canvas = document.getElementById('canvas');
+        context = canvas.getContext("2d");
+		
+		context.fillStyle = 'white';
+		
+        window.addEventListener('resize', resizeCanvas, false);
+        window.addEventListener('orientationchange', resizeCanvas, false);
+        resizeCanvas();
+		canvas.onclick = function(event) {
+			handleClick(event.clientX, event.clientY);
+		};
+      }
+	  
+	  function handleClick(x, y) {
+		
+		makeParticles();
+		console.log('Click Counter: ', clickCounter);
+
+	  }
+	  function drawCircle(circle) {
+		 context.beginPath();
+		 context.arc(circle.x, circle.y, 30, 0, degreesToRadians(360), true);
+		 context.fillStyle = circle.color;
+		 context.fill();
+	  }
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+		//fillBackgroundColor();
+		for (var i=0; i<circles.length; i++) {
+			drawCircle(circles[i]);
+		 }
+      }
+	  function fillBackgroundColor() {
+		 //var colors = ["white", "yellow", "blue", "red"];
+		 //var bgColor = colors[Math.floor(Math.random() * colors.length)];
+		 //context.fillStyle = 'black';
+		 context.fillRect(0, 0, canvas.width, canvas.height);
+	}
+	function degreesToRadians(degrees) {
+		//converts from degrees to radians and returns
+		return (degrees * Math.PI)/180;
+	}
+ 
+	
+
+ 
+
+ window.onload = function() {
+	 init();
+	 //makeParticles();
+	 timer = setInterval(moveParticles, 60);
+	 //timer = setInterval(makeParticles, 4500);
+ }
+</script>
+</head>
+<body>
+	<canvas id="canvas" width="500" height="400"></canvas>
+</body>
+</html>
