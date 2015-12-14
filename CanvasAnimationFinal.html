@@ -18,7 +18,7 @@ canvas {
  var clickCounterScreen = 0;
  var clickArray = [];
  var wordArray = ["what","is","love","baby","don't","hurt","me","don't","hurt","me","no","more"];
- var shapes = [0, 1, 2, 3, 4];
+ var shapes = [0, 1, 2, 3];
  var shapeCounter;
  var what1= new Audio("what1.wav");
  var is1= new Audio("is1.wav");
@@ -35,6 +35,7 @@ canvas {
   var insturmental= new Audio("insturmental.wav");
  var rox = new Image();
  rox.src = 'rox.jpg';
+ var colorChanger = 0;
 
  
  
@@ -91,7 +92,6 @@ canvas {
 	if (clickCounterScreen == 12) {
 	insturmental.play();
 	}
-	
 
 	clickCounter++;
 	clickCounterScreen++;
@@ -124,24 +124,50 @@ canvas {
  }
  function moveParticles() {
 	 //partially clear the screen to fade previous circles, and draw a new particle at each new coordinate
+
 	 context.globalCompositeOperation = "source-over";
+	
+	 
 	 context.fillStyle = "rgba(0, 0, 0, 0.3)";
 	 
-	 if (clickCounterScreen > 12 ){
-	 context.drawImage(rox, 0, 0, canvas.width, canvas.height);   
+	if (clickCounterScreen > 12 ){
+	context.drawImage(rox, 0, 0, canvas.width, canvas.height);
+	context.font="40px Verdana";
+	context.fillStyle = 'white';
+	context.fillText("Press W to restart", 25, 55);
+	context.fillText("Press S to change blend mode", 25, 95);
                     
 	 }
 	 else {
 	 context.fillRect(0, 0, canvas.width, canvas.height);
 	 }
-	 context.globalCompositeOperation = "lighter";
+	 
+	 if (colorChanger == 1) {
+		context.globalCompositeOperation = "overlay";
+		//console.log(colorChanger);
+	 }
+	 
+	 if (colorChanger == 2) {
+		context.globalCompositeOperation = "multiply";
+		//console.log(colorChanger);
+	 }
+	 
+	if (colorChanger == 3) {
+		context.globalCompositeOperation = "xor";
+		//console.log(colorChanger);
+	 }
+	 
+	if (colorChanger == 4) {
+		context.globalCompositeOperation = "screen";
+		//console.log(colorChanger);
+	 }
 
 	 for(var j = 0; j < clickArray.length; j++) {
 		
 //Circle
 
 		if (shapeCounter == 0) {
-		console.log("CIRCLE");
+		//console.log("CIRCLE");
 			for(var i = 0; i < particles.length; i++)
 			{
 				var p = particles[i];
@@ -164,7 +190,7 @@ canvas {
 //square
 		
 		if (shapeCounter == 1) {
-		console.log("SQUARE");
+		//console.log("SQUARE");
 			for(var i = 0; i < particles.length; i++)
 			{
 				var p = particles[i];			
@@ -188,7 +214,7 @@ canvas {
 
 
 		if (shapeCounter == 2) {
-		console.log("Triangle");
+		//console.log("Triangle");
 			for(var i = 0; i < particles.length; i++)
 			{
 				var p = particles[i];			
@@ -217,7 +243,7 @@ canvas {
 		
 		
 		if (shapeCounter == 3) {
-		console.log("Face");
+		//console.log("Face");
 			for(var i = 0; i < particles.length; i++)
 			{
 				var p = particles[i];			
@@ -245,8 +271,8 @@ canvas {
 			}
 		}
 		
-//heart
-
+//heart removed for performance reasons. 
+/*
 				if (shapeCounter == 4) {
 		console.log("heart");
 			for(var i = 0; i < particles.length; i++)
@@ -275,15 +301,12 @@ canvas {
 				if(p.y > canvas.height+50) p.y = -50;
 			}
 		}
-		
+	*/	
 		
 	 
 	}
 	
 	}
- 
- //Edit starts here
- 
 
 	  var circles = [];
 	  function Circle(x, y, color) {
@@ -292,6 +315,21 @@ canvas {
 		this.color = color;
 	  }
 	  
+	  function doKeyDown(e){
+	  //W
+		if (e.keyCode == 87) {
+			window.location.reload(); 
+			console.log ('W pressed');
+		}
+		
+	//S
+		if (e.keyCode == 83) {
+			colorChanger++;
+			if (colorChanger >= 4) {
+				colorChanger=0;
+			}
+	  }
+	}
       function init() {
 	  
         canvas = document.getElementById('canvas');
@@ -301,6 +339,7 @@ canvas {
 		
         window.addEventListener('resize', resizeCanvas, false);
         window.addEventListener('orientationchange', resizeCanvas, false);
+		window.addEventListener( 'keydown', doKeyDown, true )
         resizeCanvas();
 		canvas.onclick = function(event) {
 			handleClick(event.clientX, event.clientY);
@@ -310,7 +349,7 @@ canvas {
 	  function handleClick(x, y) {
 		
 		makeParticles();
-		console.log('Click Counter: ', clickCounter);
+		//console.log('Click Counter: ', clickCounter);
 
 	  }
 	  function drawCircle(circle) {
@@ -344,10 +383,10 @@ canvas {
 
  window.onload = function() {
 	 init();
-	 //makeParticles();
 	 timer = setInterval(moveParticles, 60);
-	 //timer = setInterval(makeParticles, 4500);
+
  }
+ 
 </script>
 </head>
 <body>
